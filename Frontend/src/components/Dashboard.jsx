@@ -13,6 +13,8 @@ const CreateProjectModal = ({ isOpen, onClose, onCreateProject }) => {
       try {
         // Check if token exists
         const token = Cookies.get("token");
+        console.log(projectName)
+        console.log(token)
         if (!token) {
           alert("No token found. Please log in.");
           return;
@@ -77,7 +79,9 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const handleLogout = () => {
     // Clear the token from cookies
-    Cookies.remove('token');
+    // Cookies.remove('token');
+    Cookies.remove('token', { path: '/' }); 
+
     
     // Redirect the user to the login page (home route)
     window.location.href = '/'; // This will redirect to the home page (login page)

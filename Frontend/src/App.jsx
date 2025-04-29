@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route 
           path="/dashboard" 
-          element={token ? <Dashboard /> : <Navigate to="/" replace />} // Redirect to Home if no token
+          element={token ? <Dashboard /> : <Navigate to="/"  />} // Redirect to Home if no token
         />
         <Route path="/register" element={<Register />} />
         {/* Add other routes as needed */}

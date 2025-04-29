@@ -3,6 +3,7 @@ const User = require("../models/User"); // Import User model
 
 exports.createProject = async (req, res) => {
   const { name } = req.body;
+  console.log(name)
 
   // Debugging - Log user and project name
   console.log("Creating project for user:", req.user);

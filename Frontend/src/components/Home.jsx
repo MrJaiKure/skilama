@@ -16,9 +16,10 @@ const Home = () => {
         email,
         password,
       });
+      console.log(response)
 
       // Store the JWT token in cookies
-      Cookies.set('token', response.data.token, { expires: 1 }); // The token will expire in 1 day
+      Cookies.set('token', response.data.token); // The token will expire in 1 day
 
       // Redirect to the dashboard after successful login
       navigate('/dashboard'); // Change the path to your desired route
