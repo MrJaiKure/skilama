@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'; // Import js-cookie for checking token
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
+import AddPodcastPage from './components/AddPodcastPage';
 
 function App() {
   // Check if token exists in cookies
@@ -16,6 +17,10 @@ function App() {
         <Route 
           path="/dashboard" 
           element={token ? <Dashboard /> : <Navigate to="/"  />} // Redirect to Home if no token
+        />
+        <Route 
+          path="/podcast" 
+          element={token ? <AddPodcastPage/> : <Navigate to="/"  />} // Redirect to Home if no token
         />
         <Route path="/register" element={<Register />} />
         {/* Add other routes as needed */}

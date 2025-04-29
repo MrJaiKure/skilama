@@ -4,7 +4,7 @@ const { createProject, getUserProjects } = require("../controllers/projectContro
 const { authenticateUser } = require("../middleware/authMiddleware");
 
 
-router.post("/create", authenticateUser, createProject);
-router.get("/", authenticateUser, getUserProjects); // Fetch user-specific projects
+router.post("/create",  createProject);
+router.get("/",  getUserProjects); // Fetch user-specific projects
 
 module.exports = router;

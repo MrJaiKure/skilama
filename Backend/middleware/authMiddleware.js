@@ -19,23 +19,27 @@ const User = require('../models/User');
 //   }
 // };
 
-const authenticateUser = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-
-  if (!token) {
-    return res.status(401).json({ message: "Authentication required" });
+const authenticateUser =async  (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  console.log('.......................')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
   }
+
+  const token = authHeader.split(' ')[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    if (!req.user._id) {
-      return res.status(401).json({ message: "Invalid token payload" });
+    const user = await User.findById(decoded.userId).select('-password');
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
     }
+
+    req.user = user;
     next();
   } catch (error) {
-    console.error("Error in authentication middleware:", error);
-    return res.status(401).json({ message: "Invalid or expired token" });
+    res.status(401).json({ message: 'Unauthorized', error: error.message });
   }
 };
 

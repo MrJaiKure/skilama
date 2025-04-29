@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { FaCog, FaBell,FaSignOutAlt  } from "react-icons/fa"; // Using react-icons for setting and notification icons
 import axios from "axios"; // Import axios for making HTTP requests
+import { jwtDecode } from "jwt-decode"; // ✅ Correct named import
+import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 // Modal Component
 const CreateProjectModal = ({ isOpen, onClose, onCreateProject }) => {
   const [projectName, setProjectName] = useState("");
 
- 
+   const navigate = useNavigate();
 
   const handleCreateProject = async () => {
     if (projectName) {
@@ -15,6 +17,14 @@ const CreateProjectModal = ({ isOpen, onClose, onCreateProject }) => {
         const token = Cookies.get("token");
         console.log(projectName)
         console.log(token)
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId || decodedToken._id || decodedToken.id;
+  
+        if (!userId) {
+          alert("Invalid token. User ID not found.");
+          return;
+        }
+        console.log(userId,'userid')
         if (!token) {
           alert("No token found. Please log in.");
           return;
@@ -23,12 +33,9 @@ const CreateProjectModal = ({ isOpen, onClose, onCreateProject }) => {
         // Send POST request with data
         const response = await axios.post(
           "http://localhost:5000/api/project/create", // Backend URL
-          { name: projectName }, // Data being sent
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Add the token to Authorization header
-            },
-          }
+          { name: projectName,
+            userId: userId,
+           }
         );
   
         console.log("Response:", response.data); // Check what you get from backend
@@ -77,6 +84,7 @@ const CreateProjectModal = ({ isOpen, onClose, onCreateProject }) => {
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
   const handleLogout = () => {
     // Clear the token from cookies
     // Cookies.remove('token');
@@ -142,6 +150,7 @@ const Dashboard = () => {
             <li key={project._id} className="bg-white p-4 rounded-lg shadow-md">
               <h3 className="font-semibold text-xl">{project.name}</h3>
               <p>Created at: {new Date(project.createdAt).toLocaleDateString()}</p>
+              {navigate("/podcast")}
             </li>
           ))}
         </ul>
